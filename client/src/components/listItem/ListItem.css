@@ -1,0 +1,45 @@
+.gridContainer{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    flex-direction: column;
+}
+.gridWrapper{
+    width: 760px;
+    height: 300px;
+}
+.tiker {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   height: 100%;
+}
+.tikerValue{
+    border-radius: 8px;
+    border: 1px solid black;
+    height: 30px;
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    min-width: 60px;
+    font-family: Roboto-Regular;
+}
+.decrease {
+    color: red;
+}
+.increase {
+    color: green;
+}
+.normal {
+    color: black;
+}
+.tableBar{
+    display: flex;
+    width: 760px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 10px;
+}
