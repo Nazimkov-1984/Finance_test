@@ -13,7 +13,7 @@ const IconFilter: React.FC<IconFilterProps> = ({ isAvtive }) => {
         x="0px"
         y="0px"
         viewBox="0 0 512 512"
-        fill={isAvtive ? "black" : "lightgrey"}
+        fill={isAvtive ? "#0096fb" : "lightgrey"}
       >
         <g>
           <g>

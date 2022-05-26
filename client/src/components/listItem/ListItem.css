@@ -7,7 +7,7 @@
     flex-direction: column;
 }
 .gridWrapper{
-    width: 760px;
+    width: 580px;
     height: 300px;
 }
 .tiker {
@@ -38,8 +38,13 @@
 }
 .tableBar{
     display: flex;
-    width: 760px;
+    width: 580px;
     justify-content: flex-end;
     align-items: center;
     margin-bottom: 10px;
+}
+.select {
+    display: flex;
+    align-items: center;
+height: 44px !important;
 }

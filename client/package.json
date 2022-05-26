@@ -13,6 +13,8 @@
     "ag-grid-community": "^27.3.0",
     "ag-grid-react": "^27.3.0",
     "classnames": "^2.3.1",
+    "mobx": "^6.6.0",
+    "mobx-react-lite": "^3.4.0",
     "multiselect-react-dropdown": "^2.0.22",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

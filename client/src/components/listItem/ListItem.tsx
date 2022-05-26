@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./ListItem.css";
 import { AgGridColumnProps, AgGridReact } from "ag-grid-react";
 
@@ -8,8 +8,13 @@ import classNames from "classnames";
 import IconArrow, { ENUM_ARROW_COLOR } from "./iconArrow/IconArrow";
 import IconFilter from "./iconFilter/IconFilter";
 import Multiselect from "multiselect-react-dropdown";
+import { RowClickedEvent } from "ag-grid-community";
+import ModalStore from "../../store/modal";
+import Store from "../../store/index";
+import { QuoteData } from "../../store";
+import Tooltip from "./Tooltip/Tooltip";
 
-enum LIST_QUOTES {
+export enum LIST_QUOTES {
   AAPL = "Apple",
   GOOGL = "Google",
   MSFT = "Microsoft",
@@ -18,110 +23,61 @@ enum LIST_QUOTES {
   TSLA = "Tesla",
 }
 
-type keysQuotes = "AAPL" | "GOOGL" | "MSFT" | "AMZN" | "FB" | "TSLA";
-
-interface QuoteData {
-  ticker: string;
-  exchange: string;
-  price: number;
-  change: number;
-  change_percent: number;
-  dividend: number;
-  yield: number;
-  last_trade_time: string;
-}
+export type keysQuotes = "AAPL" | "GOOGL" | "MSFT" | "AMZN" | "FB" | "TSLA";
 
 interface MultiSelectOptions {
   name: string;
-  id: number;
+  id: string;
 }
 
 const ListItem: React.FC = () => {
-  const [rowData] = useState<QuoteData[]>([
-    {
-      ticker: "GOOGL",
-      exchange: "NASDAQ",
-      price: 237.08,
-      change: 154.38,
-      change_percent: 0.1,
-      dividend: 0.46,
-      yield: 1.18,
-      last_trade_time: "2021-04-30T11:53:21.000Z",
-    },
-    {
-      ticker: "MSFT",
-      exchange: "NASDAQ",
-      price: 261.46,
-      change: -161.45,
-      change_percent: -0.41,
-      dividend: 0.18,
-      yield: 0.98,
-      last_trade_time: "2021-04-30T11:53:21.000Z",
-    },
-    {
-      ticker: "AMZN",
-      exchange: "NASDAQ",
-      price: 260.34,
-      change: 128.71,
-      change_percent: 0.6,
-      dividend: 0.07,
-      yield: 0.42,
-      last_trade_time: "2021-04-30T11:53:21.000Z",
-    },
-    {
-      ticker: "FB",
-      exchange: "NASDAQ",
-      price: 266.77,
-      change: 171.92,
-      change_percent: 0.75,
-      dividend: 0.52,
-      yield: 1.31,
-      last_trade_time: "2021-04-30T11:53:21.000Z",
-    },
-    {
-      ticker: "TSLA",
-      exchange: "NASDAQ",
-      price: 272.13,
-      change: 158.76,
-      change_percent: 0.1,
-      dividend: 0.96,
-      yield: 1.0,
-      last_trade_time: "2021-04-30T11:53:21.000Z",
-    },
-  ]);
+  const [rowData, setRowData] = useState<QuoteData[]>([]);
+
+  useEffect(() => {
+    setRowData(Store.dataQuote);
+  }, []);
+
+  const defaultColDef = useMemo(() => {
+    return {
+      tooltipComponent: Tooltip,
+    };
+  }, []);
 
   const [columnDefs] = useState<AgGridColumnProps[]>([
     {
       field: "ticker",
       maxWidth: 90,
-      cellRendererFramework: (props: { value: string }) => {
+      cellRenderer: (props: { value: string }) => {
         return (
           <div className="tiker">
             <span className="tikerValue">{props.value}</span>
           </div>
         );
       },
+      tooltipField: "ticker",
     },
     {
       field: "ticker",
       headerName: "Name",
       maxWidth: 100,
-      cellRendererFramework: (props: { value: keysQuotes }) => {
+      cellRenderer: (props: { value: keysQuotes }) => {
         return <span>{LIST_QUOTES[props.value]}</span>;
       },
+      tooltipField: "ticker",
     },
-    { field: "exchange", maxWidth: 100 },
+    { field: "exchange", maxWidth: 100, tooltipField: "exchange" },
     {
       field: "price",
       maxWidth: 85,
-      cellRendererFramework: (props: { value: number }) => {
+      cellRenderer: (props: { value: number }) => {
         return <span>{` $${props.value}`}</span>;
       },
+      tooltipField: "price",
     },
     {
       field: "change",
       maxWidth: 85,
-      cellRendererFramework: (props: { value: number }) => {
+      cellRenderer: (props: { value: number }) => {
         return (
           <span
             className={classNames(
@@ -134,12 +90,13 @@ const ListItem: React.FC = () => {
           </span>
         );
       },
+      tooltipField: "change",
     },
     {
       field: "change_percent",
       headerName: "%",
       maxWidth: 100,
-      cellRendererFramework: (props: { value: number }) => {
+      cellRenderer: (props: { value: number }) => {
         const color =
           props.value > 0
             ? ENUM_ARROW_COLOR.GREEN
@@ -161,23 +118,68 @@ const ListItem: React.FC = () => {
           </>
         );
       },
+      tooltipField: "change_percent",
     },
-    { field: "dividend", maxWidth: 100 },
-    { field: "yield", maxWidth: 80 },
   ]);
 
-  const [options] = useState<MultiSelectOptions[]>([
-    { name: "Option1", id: 1 },
-    { name: "Option2", id: 2 },
-  ]);
+  const [options, setOptions] = useState<MultiSelectOptions[]>([]);
+
+  const getSelectOptions = (data: QuoteData[]) => {
+    const result: MultiSelectOptions[] = [];
+    data.forEach((quote: QuoteData) => {
+      result.push({
+        name: LIST_QUOTES[quote.ticker as keysQuotes],
+        id: quote.ticker,
+      });
+    });
+    return result;
+  };
+
+  useMemo(() => {
+    setOptions(getSelectOptions(rowData));
+  }, [rowData]);
 
   const [selectedValue, setSelectedValue] = useState<MultiSelectOptions[]>([]);
+  const [filterData, setFilterData] = useState<QuoteData[]>([]);
 
-  const onSelectFilter = useCallback((selectedItem: MultiSelectOptions[]) => {
-    setSelectedValue(selectedItem);
-  }, []);
-  const onRemoveFilter = useCallback((removedItem: MultiSelectOptions[]) => {
-    setSelectedValue(removedItem);
+  const findAndSetFilteredElements = useCallback(
+    (values: MultiSelectOptions[]) => {
+      const newState: QuoteData[] = [];
+      values.forEach((item: MultiSelectOptions) => {
+        const newFilteredElement: QuoteData | undefined = rowData.find(
+          (el: QuoteData) => el.ticker === item.id
+        );
+        if (newFilteredElement) {
+          newState.push(newFilteredElement);
+        }
+      });
+      setFilterData(newState);
+    },
+    [rowData]
+  );
+
+  const onSelectFilter = useCallback(
+    (selectedItem: MultiSelectOptions[]) => {
+      setSelectedValue(selectedItem);
+      findAndSetFilteredElements(selectedItem);
+    },
+    [findAndSetFilteredElements]
+  );
+
+  const onRemoveFilter = useCallback(
+    (removedItem: MultiSelectOptions[]) => {
+      setSelectedValue(removedItem);
+      if (removedItem.length > 0) {
+        findAndSetFilteredElements(removedItem);
+      } else {
+        setFilterData([]);
+      }
+    },
+    [findAndSetFilteredElements]
+  );
+
+  const openModalHandler = useCallback((event: RowClickedEvent) => {
+    ModalStore.toggleModal(event.data.ticker);
   }, []);
 
   return (
@@ -185,21 +187,27 @@ const ListItem: React.FC = () => {
       <div className="tableBar">
         <IconFilter isAvtive={selectedValue.length !== 0} />
         <Multiselect
+          className="select"
           options={options}
           selectedValues={selectedValue}
           onSelect={onSelectFilter}
           onRemove={onRemoveFilter}
           displayValue="name"
-          placeholder="Choose quote..."
+          placeholder="Select quote..."
           hidePlaceholder={true}
           showArrow={true}
+          showCheckbox={true}
         />
       </div>
       <div className="ag-theme-alpine gridWrapper">
         <AgGridReact
           rowClass="styleRow"
-          rowData={rowData}
+          rowData={filterData.length > 0 ? filterData : rowData}
           columnDefs={columnDefs}
+          onRowClicked={openModalHandler}
+          tooltipShowDelay={0}
+          tooltipHideDelay={1000}
+          defaultColDef={defaultColDef}
         ></AgGridReact>
       </div>
     </div>
