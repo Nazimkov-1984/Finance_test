@@ -14,7 +14,7 @@
     width: 400px;
     border-radius: 5px;
     background-color: #fff;
-    height: 240px;
+    height: 300px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -66,4 +66,20 @@ margin-bottom: 6px
 .buttonModal:hover {
     border-color: black;
     cursor: pointer;
+}
+.calendarWrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+.dateTitle{
+    display: block;
+        font-family: Roboto-Regular;
+        font-size: 12px;
+        padding-bottom: 4px;
+}
+.calendarModal{
+   padding: 3px 6px !important;
 }

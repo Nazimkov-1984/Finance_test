@@ -2,11 +2,12 @@ import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import ModalStore from "../../store/modal";
 import Store from "../../store/index";
-
 import "./Modal.css";
 import IconClose from "./IconClose/IconClose";
 import { QuoteData } from "../../store";
 import { keysQuotes, LIST_QUOTES } from "../tableQoutes/TableQuotes";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/airbnb.css";
 
 const Modal = observer(() => {
   const [quoteData, setQuoteData] = useState<QuoteData>();
@@ -45,6 +46,14 @@ const Modal = observer(() => {
           </div>
 
           <div className="modalDataWrapper">
+            <div className="calendarWrapper">
+              <span className="dateTitle"> Last update time: </span>
+              <Flatpickr
+                className="calendarModal"
+                data-enable-time
+                value={quoteData?.last_trade_time}
+              />
+            </div>
             <span className="modalDataValue">{`Price: $${quoteData?.price}`}</span>
             <span className="modalDataValue">{`Change: ${quoteData?.change}`}</span>
             <span className="modalDataValue">{`Change, % : ${quoteData?.change_percent}`}</span>
