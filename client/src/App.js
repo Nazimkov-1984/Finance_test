@@ -1,7 +1,7 @@
-import "./App.css";
 import io from "socket.io-client";
 import Header from "./components/header/Header";
-import ListItem from "./components/listItem/ListItem";
+import Store from "./store/index";
+import TableQuotes from "./components/tableQoutes/TableQuotes";
 
 const ENDPOINT = "http://localhost:4000/";
 
@@ -10,14 +10,13 @@ function App() {
   socket.emit("start");
   socket.on("ticker", (response) => {
     const res = Array.isArray(response) ? response : [response];
-    const json = res.map((item) => JSON.stringify(item)).join("\n");
-    console.log(json);
+    Store.setData(res);
   });
 
   return (
-    <div className="App">
+    <div>
       <Header />
-      <ListItem />
+      <TableQuotes />
     </div>
   );
 }

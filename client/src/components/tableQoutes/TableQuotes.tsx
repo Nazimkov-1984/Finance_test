@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import "./ListItem.css";
+import "./TableQuotes.css";
 import { AgGridColumnProps, AgGridReact } from "ag-grid-react";
 
 import "ag-grid-community/dist/styles/ag-grid.css";
@@ -13,6 +13,8 @@ import ModalStore from "../../store/modal";
 import Store from "../../store/index";
 import { QuoteData } from "../../store";
 import Tooltip from "./Tooltip/Tooltip";
+import { observer } from "mobx-react-lite";
+import Loader from "./loader/Loader";
 
 export enum LIST_QUOTES {
   AAPL = "Apple",
@@ -25,17 +27,38 @@ export enum LIST_QUOTES {
 
 export type keysQuotes = "AAPL" | "GOOGL" | "MSFT" | "AMZN" | "FB" | "TSLA";
 
-interface MultiSelectOptions {
+export interface MultiSelectOptions {
   name: string;
   id: string;
 }
 
-const ListItem: React.FC = () => {
+const TableQuotes: React.FC = observer(() => {
   const [rowData, setRowData] = useState<QuoteData[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<MultiSelectOptions[]>(
+    []
+  );
+
+  const applyFilter = useCallback((filter: MultiSelectOptions[]) => {
+    const filteredData: QuoteData[] = [];
+    filter.forEach((item: MultiSelectOptions) => {
+      const newElement: QuoteData | undefined = Store.dataQuote.find(
+        (it: QuoteData) => it.ticker === item.id
+      );
+      if (newElement) {
+        filteredData.push(newElement);
+      }
+    });
+    setRowData(filteredData);
+  }, []);
 
   useEffect(() => {
-    setRowData(Store.dataQuote);
-  }, []);
+    if (selectedFilters.length === 0) {
+      setRowData(Store.dataQuote);
+    } else {
+      applyFilter(selectedFilters);
+    }
+    // eslint-disable-next-line
+  }, [Store.dataQuote]);
 
   const defaultColDef = useMemo(() => {
     return {
@@ -136,60 +159,42 @@ const ListItem: React.FC = () => {
   };
 
   useMemo(() => {
-    setOptions(getSelectOptions(rowData));
-  }, [rowData]);
-
-  const [selectedValue, setSelectedValue] = useState<MultiSelectOptions[]>([]);
-  const [filterData, setFilterData] = useState<QuoteData[]>([]);
-
-  const findAndSetFilteredElements = useCallback(
-    (values: MultiSelectOptions[]) => {
-      const newState: QuoteData[] = [];
-      values.forEach((item: MultiSelectOptions) => {
-        const newFilteredElement: QuoteData | undefined = rowData.find(
-          (el: QuoteData) => el.ticker === item.id
-        );
-        if (newFilteredElement) {
-          newState.push(newFilteredElement);
-        }
-      });
-      setFilterData(newState);
-    },
-    [rowData]
-  );
+    setOptions(getSelectOptions(Store.dataQuote));
+    // eslint-disable-next-line
+  }, [Store.dataQuote]);
 
   const onSelectFilter = useCallback(
     (selectedItem: MultiSelectOptions[]) => {
-      setSelectedValue(selectedItem);
-      findAndSetFilteredElements(selectedItem);
+      setSelectedFilters(selectedItem);
+      applyFilter(selectedItem);
     },
-    [findAndSetFilteredElements]
+    [applyFilter]
   );
 
   const onRemoveFilter = useCallback(
     (removedItem: MultiSelectOptions[]) => {
-      setSelectedValue(removedItem);
-      if (removedItem.length > 0) {
-        findAndSetFilteredElements(removedItem);
-      } else {
-        setFilterData([]);
-      }
+      setSelectedFilters(removedItem);
+      applyFilter(removedItem);
     },
-    [findAndSetFilteredElements]
+    [applyFilter]
   );
 
   const openModalHandler = useCallback((event: RowClickedEvent) => {
     ModalStore.toggleModal(event.data.ticker);
   }, []);
 
+  const loadingOverlayComponent = useMemo(() => {
+    return Loader;
+  }, []);
+
   return (
     <div className="gridContainer">
       <div className="tableBar">
-        <IconFilter isAvtive={selectedValue.length !== 0} />
+        <IconFilter isAvtive={selectedFilters.length !== 0} />
         <Multiselect
           className="select"
           options={options}
-          selectedValues={selectedValue}
+          selectedValues={selectedFilters}
           onSelect={onSelectFilter}
           onRemove={onRemoveFilter}
           displayValue="name"
@@ -201,16 +206,18 @@ const ListItem: React.FC = () => {
       </div>
       <div className="ag-theme-alpine gridWrapper">
         <AgGridReact
+          noRowsOverlayComponent={loadingOverlayComponent}
           rowClass="styleRow"
-          rowData={filterData.length > 0 ? filterData : rowData}
+          rowData={rowData}
           columnDefs={columnDefs}
           onRowClicked={openModalHandler}
           tooltipShowDelay={0}
           tooltipHideDelay={1000}
+          animateRows={true}
           defaultColDef={defaultColDef}
         ></AgGridReact>
       </div>
     </div>
   );
-};
-export default ListItem;
+});
+export default TableQuotes;

@@ -6,7 +6,7 @@ import Store from "../../store/index";
 import "./Modal.css";
 import IconClose from "./IconClose/IconClose";
 import { QuoteData } from "../../store";
-import { keysQuotes, LIST_QUOTES } from "../listItem/ListItem";
+import { keysQuotes, LIST_QUOTES } from "../tableQoutes/TableQuotes";
 
 const Modal = observer(() => {
   const [quoteData, setQuoteData] = useState<QuoteData>();

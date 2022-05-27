@@ -8,7 +8,7 @@
 }
 .gridWrapper{
     width: 580px;
-    height: 300px;
+    height: 330px;
 }
 .tiker {
     display: flex;
@@ -47,4 +47,16 @@
     display: flex;
     align-items: center;
 height: 44px !important;
+}
+
+@media (max-width:580px) {
+    .gridWrapper{
+    width: 100%;
+}
+.tableBar {
+    width: 100%;
+}
+.gridContainer {
+    padding: 20px 10px;
+}
 }
