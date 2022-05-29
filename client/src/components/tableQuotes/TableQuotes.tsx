@@ -1,13 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "./TableQuotes.css";
 import { AgGridColumnProps, AgGridReact } from "ag-grid-react";
-
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 import classNames from "classnames";
 import IconArrow, { ENUM_ARROW_COLOR } from "./iconArrow/IconArrow";
-import IconFilter from "./iconFilter/IconFilter";
-import Multiselect from "multiselect-react-dropdown";
 import { RowClickedEvent } from "ag-grid-community";
 import ModalStore from "../../store/modal";
 import Store from "../../store/index";
@@ -15,6 +12,7 @@ import { QuoteData } from "../../store";
 import Tooltip from "./Tooltip/Tooltip";
 import { observer } from "mobx-react-lite";
 import Loader from "./loader/Loader";
+import TableFilter from "./tableFilter/TableFilter";
 
 export enum LIST_QUOTES {
   AAPL = "Apple",
@@ -145,40 +143,6 @@ const TableQuotes: React.FC = observer(() => {
     },
   ]);
 
-  const [options, setOptions] = useState<MultiSelectOptions[]>([]);
-
-  const getSelectOptions = (data: QuoteData[]) => {
-    const result: MultiSelectOptions[] = [];
-    data.forEach((quote: QuoteData) => {
-      result.push({
-        name: LIST_QUOTES[quote.ticker as keysQuotes],
-        id: quote.ticker,
-      });
-    });
-    return result;
-  };
-
-  useMemo(() => {
-    setOptions(getSelectOptions(Store.dataQuote));
-    // eslint-disable-next-line
-  }, [Store.dataQuote]);
-
-  const onSelectFilter = useCallback(
-    (selectedItem: MultiSelectOptions[]) => {
-      setSelectedFilters(selectedItem);
-      applyFilter(selectedItem);
-    },
-    [applyFilter]
-  );
-
-  const onRemoveFilter = useCallback(
-    (removedItem: MultiSelectOptions[]) => {
-      setSelectedFilters(removedItem);
-      applyFilter(removedItem);
-    },
-    [applyFilter]
-  );
-
   const openModalHandler = useCallback((event: RowClickedEvent) => {
     ModalStore.toggleModal(event.data.ticker);
   }, []);
@@ -189,21 +153,13 @@ const TableQuotes: React.FC = observer(() => {
 
   return (
     <div className="gridContainer">
-      <div className="tableBar">
-        <IconFilter isAvtive={selectedFilters.length !== 0} />
-        <Multiselect
-          className="select"
-          options={options}
-          selectedValues={selectedFilters}
-          onSelect={onSelectFilter}
-          onRemove={onRemoveFilter}
-          displayValue="name"
-          placeholder="Select quote..."
-          hidePlaceholder={true}
-          showArrow={true}
-          showCheckbox={true}
-        />
-      </div>
+      <TableFilter
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        setRowData={setRowData}
+        applyFilter={applyFilter}
+        rowData={rowData}
+      />
       <div className="ag-theme-alpine gridWrapper">
         <AgGridReact
           noRowsOverlayComponent={loadingOverlayComponent}

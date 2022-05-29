@@ -14,6 +14,7 @@ const IconFilter: React.FC<IconFilterProps> = ({ isAvtive }) => {
         y="0px"
         viewBox="0 0 512 512"
         fill={isAvtive ? "#0096fb" : "lightgrey"}
+        data-testid="iconFilter"
       >
         <g>
           <g>

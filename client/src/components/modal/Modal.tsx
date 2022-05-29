@@ -5,9 +5,10 @@ import Store from "../../store/index";
 import "./Modal.css";
 import IconClose from "./IconClose/IconClose";
 import { QuoteData } from "../../store";
-import { keysQuotes, LIST_QUOTES } from "../tableQoutes/TableQuotes";
+import { keysQuotes, LIST_QUOTES } from "../tableQuotes/TableQuotes";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/airbnb.css";
+import ButtonAddToFavorite from "./buttonAddToFavorite/ButtonAddToFavorite";
 
 const Modal = observer(() => {
   const [quoteData, setQuoteData] = useState<QuoteData>();
@@ -60,9 +61,12 @@ const Modal = observer(() => {
             <span className="modalDataValue">{`Dividend: ${quoteData?.dividend}`}</span>
             <span className="modalDataValue">{`Yield: ${quoteData?.yield}`}</span>
           </div>
-          <button onClick={onCloseModal} className="buttonModal">
-            Close
-          </button>
+          <div className="buttonsWrapper">
+            <ButtonAddToFavorite itemId={ModalStore.idQuote as string} />
+            <button onClick={onCloseModal} className="buttonModal">
+              Close
+            </button>
+          </div>
         </div>
       </div>
     );

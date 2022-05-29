@@ -83,3 +83,10 @@ margin-bottom: 6px
 .calendarModal{
    padding: 3px 6px !important;
 }
+
+.buttonsWrapper{
+    display: flex;
+}
+.buttonAdd {
+    margin-right: 10px;
+}

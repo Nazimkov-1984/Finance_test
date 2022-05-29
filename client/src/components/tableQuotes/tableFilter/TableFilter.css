@@ -1,0 +1,18 @@
+.tableBar{
+    display: flex;
+    width: 580px;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.select {
+    display: flex;
+    align-items: center;
+height: 44px !important;
+}
+
+@media (max-width:580px) {
+.tableBar {
+    width: 100%;
+}
+}

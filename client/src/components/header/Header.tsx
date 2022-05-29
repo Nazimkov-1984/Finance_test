@@ -1,3 +1,4 @@
+import Favorite from "./favorite/Favorite";
 import "./Header.css";
 
 const Header: React.FC = () => {
@@ -9,6 +10,7 @@ const Header: React.FC = () => {
         alt="Main logo"
       />
       <h1 className="headerTitle">Finance test task</h1>
+      <Favorite />
     </header>
   );
 };
