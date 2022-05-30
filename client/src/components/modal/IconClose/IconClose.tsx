@@ -1,11 +1,19 @@
 import { useCallback } from "react";
 import ModalStore from "../../../store/modal";
+import ModalFavoriteStore from "../../../store/favoriteModal";
 import "./IconClose.css";
+export interface CloseModalComponentsProps {
+  isInFavoriteModal?: boolean;
+}
 
-const IconClose: React.FC = () => {
+const IconClose: React.FC<CloseModalComponentsProps> = ({
+  isInFavoriteModal,
+}) => {
   const onCloseModal = useCallback(() => {
-    ModalStore.toggleModal();
-  }, []);
+    isInFavoriteModal
+      ? ModalFavoriteStore.toggleModal()
+      : ModalStore.toggleModal();
+  }, [isInFavoriteModal]);
 
   return (
     <svg

@@ -4,8 +4,7 @@ import ModalFavoriteStore from "../../../store/favoriteModal";
 import { observer } from "mobx-react-lite";
 import { useCallback } from "react";
 
-const Favorite = observer(() => {
-  
+const Favorite: React.FC = observer(() => {
   const onClickHandler = useCallback(() => {
     ModalFavoriteStore.toggleModal();
   }, []);

@@ -1,21 +1,37 @@
 .modalFavorite {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, .7);
-    display: flex;
-    justify-content: center;
-    padding-top: 25%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  padding-top: 25%;
 }
 
 .modalFavoriteBody {
-    width: 400px;
-    border-radius: 5px;
-    background-color: #fff;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  width: 600px;
+  border-radius: 5px;
+  background-color: #fff;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+.gridWrapper {
+  width: 600px;
+  height: 330px;
+  margin-bottom: 20px;
+}
+.modalFavoriteHeader {
+  display: flex;
+  width: 600px;
+  padding: 6px 10px;
+  justify-content: space-between;
+}
+.modalFavoriteTitle {
+  font-size: 18px;
+  font-family: Roboto-Regular;
 }

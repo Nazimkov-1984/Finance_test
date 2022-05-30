@@ -1,6 +1,6 @@
 import { Circles } from "react-loader-spinner";
 
-const Loader = () => {
+const Loader: React.FC = () => {
   return <Circles data-testid="loader" color="moccasin" />;
 };
 

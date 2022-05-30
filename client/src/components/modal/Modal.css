@@ -1,92 +1,91 @@
 .modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, .7);
-    display: flex;
-    justify-content: center;
-    padding-top: 25%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  padding-top: 25%;
 }
 
 .modalBody {
-    width: 400px;
-    border-radius: 5px;
-    background-color: #fff;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+  width: 400px;
+  border-radius: 5px;
+  background-color: #fff;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
-.modalHeader{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    font-family: Montserrat-Bold;
-    background-color: moccasin;
-    padding: 6px 10px;
-    border-radius:5px ;
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-family: Montserrat-Bold;
+  background-color: moccasin;
+  padding: 6px 10px;
+  border-radius: 5px;
 }
-.modalTitleWrapper{
-    display: flex;
-    align-items: center;
+.modalTitleWrapper {
+  display: flex;
+  align-items: center;
 }
-.modalTitle{
-    font-family:Roboto-Regular;
-    font-size: 18px;
+.modalTitle {
+  font-family: Roboto-Regular;
+  font-size: 18px;
 }
-.modalIcon{
-    border: 1px solid black;
-    border-radius: 4px;
-    padding: 4px 6px;
-    margin-right: 6px;
+.modalIcon {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 4px 6px;
+  margin-right: 6px;
 }
-.modalDataWrapper{
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-        margin-bottom: 20px;
-
+.modalDataWrapper {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 .modalDataValue {
-    font-family: Roboto-Regular;
+  font-family: Roboto-Regular;
 }
 .modalDataValue:not(:last-child) {
-margin-bottom: 6px
+  margin-bottom: 6px;
 }
-.buttonModal{
-    padding: 6px 10px;
-    background-color: moccasin;
-    border: 1px solid transparent;
-    transition: all .6s ease;
-    border-radius: 5px;
+.buttonModal {
+  padding: 6px 10px;
+  background-color: moccasin;
+  border: 1px solid transparent;
+  transition: all 0.6s ease;
+  border-radius: 5px;
 }
 .buttonModal:hover {
-    border-color: black;
-    cursor: pointer;
+  border-color: black;
+  cursor: pointer;
 }
 .calendarWrapper {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10px;
 }
-.dateTitle{
-    display: block;
-        font-family: Roboto-Regular;
-        font-size: 12px;
-        padding-bottom: 4px;
+.dateTitle {
+  display: block;
+  font-family: Roboto-Regular;
+  font-size: 12px;
+  padding-bottom: 4px;
 }
-.calendarModal{
-   padding: 3px 6px !important;
+.calendarModal {
+  padding: 3px 6px !important;
 }
 
-.buttonsWrapper{
-    display: flex;
+.buttonsWrapper {
+  display: flex;
 }
 .buttonAdd {
-    margin-right: 10px;
+  margin-right: 10px;
 }

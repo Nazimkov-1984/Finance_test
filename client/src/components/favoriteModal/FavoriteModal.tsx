@@ -12,8 +12,10 @@ import { keysQuotes, LIST_QUOTES } from "../tableQuotes/TableQuotes";
 import { observer } from "mobx-react-lite";
 import "./FavoriteModal.css";
 import Store from "../../store/index";
+import IconClose from "../modal/IconClose/IconClose";
+import ButtonClose from "../modal/buttonClose/ButtonClose";
 
-const ModalFavorite = observer(() => {
+const ModalFavorite: React.FC = observer(() => {
   const [rowData, setRowData] = useState<QuoteData[]>([]);
 
   const applyFilter = useCallback((filter: string[]) => {
@@ -122,10 +124,15 @@ const ModalFavorite = observer(() => {
 
   if (ModalFavoriteStore.isOpenModal) {
     return (
-      <div className="modalFavorite" onClick={onOutsideClick}>
+      <div
+        data-testid="modalFavorite"
+        className="modalFavorite"
+        onClick={onOutsideClick}
+      >
         <div className="modalFavoriteBody">
           <div className="modalFavoriteHeader">
-            <span>Favorite quotes</span>
+            <span className="modalFavoriteTitle">Favorite quotes</span>
+            <IconClose isInFavoriteModal={true} />
           </div>
           <div className="ag-theme-alpine gridWrapper">
             <AgGridReact
@@ -134,6 +141,7 @@ const ModalFavorite = observer(() => {
               animateRows={true}
             ></AgGridReact>
           </div>
+          <ButtonClose isInFavoriteModal={true} />
         </div>
       </div>
     );

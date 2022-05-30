@@ -9,8 +9,9 @@ import { keysQuotes, LIST_QUOTES } from "../tableQuotes/TableQuotes";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/airbnb.css";
 import ButtonAddToFavorite from "./buttonAddToFavorite/ButtonAddToFavorite";
+import ButtonClose from "./buttonClose/ButtonClose";
 
-const Modal = observer(() => {
+const Modal: React.FC = observer(() => {
   const [quoteData, setQuoteData] = useState<QuoteData>();
   useEffect(() => {
     const id = ModalStore.idQuote;
@@ -28,13 +29,9 @@ const Modal = observer(() => {
     }
   }, []);
 
-  const onCloseModal = useCallback(() => {
-    ModalStore.toggleModal();
-  }, []);
-
   if (ModalStore.isOpenModal) {
     return (
-      <div className="modal" onClick={onOutsideClick}>
+      <div data-testid="modal" className="modal" onClick={onOutsideClick}>
         <div className="modalBody">
           <div className="modalHeader">
             <div className="modalTitleWrapper">
@@ -63,9 +60,7 @@ const Modal = observer(() => {
           </div>
           <div className="buttonsWrapper">
             <ButtonAddToFavorite itemId={ModalStore.idQuote as string} />
-            <button onClick={onCloseModal} className="buttonModal">
-              Close
-            </button>
+            <ButtonClose />
           </div>
         </div>
       </div>

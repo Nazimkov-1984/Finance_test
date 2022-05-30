@@ -1,0 +1,11 @@
+.buttonModal{
+    padding: 6px 10px;
+    background-color: moccasin;
+    border: 1px solid transparent;
+    transition: all .6s ease;
+    border-radius: 5px;
+}
+.buttonModal:hover {
+    border-color: black;
+    cursor: pointer;
+}
