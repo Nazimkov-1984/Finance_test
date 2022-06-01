@@ -1,16 +1,16 @@
 import Multiselect from "multiselect-react-dropdown";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { QuoteData } from "../../../store";
 import IconFilter from "../iconFilter/IconFilter";
 import { keysQuotes, LIST_QUOTES, MultiSelectOptions } from "../TableQuotes";
 import Store from "../../../store/index";
 import "./TableFilter.css";
+import getFilteredRowData from "../../../hooks/useRowData";
 
 interface TableFilterProps {
   selectedFilters: MultiSelectOptions[];
   setSelectedFilters: (selectedItem: MultiSelectOptions[]) => void;
   setRowData: (data: QuoteData[]) => void;
-  applyFilter: (filter: MultiSelectOptions[]) => void;
   rowData: QuoteData[];
 }
 
@@ -18,7 +18,6 @@ const TableFilter: React.FC<TableFilterProps> = ({
   selectedFilters,
   setSelectedFilters,
   setRowData,
-  applyFilter,
   rowData,
 }) => {
   const [options, setOptions] = useState<MultiSelectOptions[]>([]);
@@ -34,7 +33,7 @@ const TableFilter: React.FC<TableFilterProps> = ({
     return result;
   };
 
-  useMemo(() => {
+  useEffect(() => {
     setOptions(getSelectOptions(Store.dataQuote));
     // eslint-disable-next-line
   }, [Store.dataQuote]);
@@ -42,17 +41,17 @@ const TableFilter: React.FC<TableFilterProps> = ({
   const onSelectFilter = useCallback(
     (selectedItem: MultiSelectOptions[]) => {
       setSelectedFilters(selectedItem);
-      applyFilter(selectedItem);
+      setRowData(getFilteredRowData(selectedItem));
     },
-    [applyFilter, setSelectedFilters]
+    [setSelectedFilters, setRowData]
   );
 
   const onRemoveFilter = useCallback(
     (removedItem: MultiSelectOptions[]) => {
       setSelectedFilters(removedItem);
-      applyFilter(removedItem);
+      setRowData(getFilteredRowData(removedItem));
     },
-    [applyFilter, setSelectedFilters]
+    [setSelectedFilters, setRowData]
   );
   return (
     <div className="tableBar" data-testid="TableFilter">

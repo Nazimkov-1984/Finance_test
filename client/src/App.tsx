@@ -6,6 +6,10 @@ import getSocketData from "./services/socketConnect";
 function App() {
   useEffect(() => {
     getSocketData();
+    return () => {
+      console.log("sdfsdf");
+      getSocketData(true);
+    };
   }, []);
 
   return (

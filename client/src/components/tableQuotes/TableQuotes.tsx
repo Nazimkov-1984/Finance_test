@@ -13,6 +13,7 @@ import Tooltip from "./Tooltip/Tooltip";
 import { observer } from "mobx-react-lite";
 import Loader from "./loader/Loader";
 import TableFilter from "./tableFilter/TableFilter";
+import getFilteredRowData from "../../hooks/useRowData";
 
 export enum LIST_QUOTES {
   AAPL = "Apple",
@@ -36,24 +37,11 @@ const TableQuotes: React.FC = observer(() => {
     []
   );
 
-  const applyFilter = useCallback((filter: MultiSelectOptions[]) => {
-    const filteredData: QuoteData[] = [];
-    filter.forEach((item: MultiSelectOptions) => {
-      const newElement: QuoteData | undefined = Store.dataQuote.find(
-        (it: QuoteData) => it.ticker === item.id
-      );
-      if (newElement) {
-        filteredData.push(newElement);
-      }
-    });
-    setRowData(filteredData);
-  }, []);
-
   useEffect(() => {
     if (selectedFilters.length === 0) {
       setRowData(Store.dataQuote);
     } else {
-      applyFilter(selectedFilters);
+      setRowData(getFilteredRowData(selectedFilters));
     }
     // eslint-disable-next-line
   }, [Store.dataQuote]);
@@ -64,7 +52,7 @@ const TableQuotes: React.FC = observer(() => {
     };
   }, []);
 
-  const [columnDefs] = useState<AgGridColumnProps[]>([
+  const columnDefs: AgGridColumnProps[] = [
     {
       field: "ticker",
       maxWidth: 90,
@@ -141,7 +129,7 @@ const TableQuotes: React.FC = observer(() => {
       },
       tooltipField: "change_percent",
     },
-  ]);
+  ];
 
   const openModalHandler = useCallback((event: RowClickedEvent) => {
     ModalStore.toggleModal(event.data.ticker);
@@ -157,7 +145,6 @@ const TableQuotes: React.FC = observer(() => {
         selectedFilters={selectedFilters}
         setSelectedFilters={setSelectedFilters}
         setRowData={setRowData}
-        applyFilter={applyFilter}
         rowData={rowData}
       />
       <div className="ag-theme-alpine gridWrapper">

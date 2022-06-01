@@ -1,7 +1,13 @@
 import { AgGridColumnProps, AgGridReact } from "ag-grid-react";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
-import { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ModalFavoriteStore from "../../store/favoriteModal";
 import { QuoteData } from "../../store";
 import classNames from "classnames";
@@ -11,39 +17,26 @@ import IconArrow, {
 import { keysQuotes, LIST_QUOTES } from "../tableQuotes/TableQuotes";
 import { observer } from "mobx-react-lite";
 import "./FavoriteModal.css";
-import Store from "../../store/index";
 import IconClose from "../modal/IconClose/IconClose";
 import ButtonClose from "../modal/buttonClose/ButtonClose";
+import getFilteredRowData from "../../hooks/useRowData";
 
 const ModalFavorite: React.FC = observer(() => {
   const [rowData, setRowData] = useState<QuoteData[]>([]);
-
-  const applyFilter = useCallback((filter: string[]) => {
-    const filteredData: QuoteData[] = [];
-    filter.forEach((item: string) => {
-      const newElement: QuoteData | undefined = Store.dataQuote.find(
-        (it: QuoteData) => it.ticker === item
-      );
-      if (newElement) {
-        filteredData.push(newElement);
-      }
-    });
-    setRowData(filteredData);
-  }, []);
+  const modalRef = useRef(null);
 
   useEffect(() => {
-    applyFilter(ModalFavoriteStore.favoriteData);
+    setRowData(getFilteredRowData(undefined, ModalFavoriteStore.favoriteData));
     // eslint-disable-next-line
   }, [ModalFavoriteStore.isOpenModal]);
 
   const onOutsideClick = useCallback((e: SyntheticEvent) => {
-    const modal = document.querySelector(".modalFavorite");
-    if (e.target === modal) {
+    if (e.target === modalRef.current) {
       ModalFavoriteStore.toggleModal();
     }
   }, []);
 
-  const [columnDefs] = useState<AgGridColumnProps[]>([
+  const columnDefs: AgGridColumnProps[] = [
     {
       field: "ticker",
       maxWidth: 90,
@@ -120,7 +113,7 @@ const ModalFavorite: React.FC = observer(() => {
       },
       tooltipField: "change_percent",
     },
-  ]);
+  ];
 
   if (ModalFavoriteStore.isOpenModal) {
     return (
@@ -128,6 +121,7 @@ const ModalFavorite: React.FC = observer(() => {
         data-testid="modalFavorite"
         className="modalFavorite"
         onClick={onOutsideClick}
+        ref={modalRef}
       >
         <div className="modalFavoriteBody">
           <div className="modalFavoriteHeader">

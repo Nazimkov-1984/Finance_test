@@ -1,4 +1,10 @@
-import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import React, {
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { observer } from "mobx-react-lite";
 import ModalStore from "../../store/modal";
 import Store from "../../store/index";
@@ -22,16 +28,22 @@ const Modal: React.FC = observer(() => {
     // eslint-disable-next-line
   }, [ModalStore._idQoute]);
 
+  const refModal = useRef(null);
+
   const onOutsideClick = useCallback((e: SyntheticEvent) => {
-    const modal = document.querySelector(".modal");
-    if (e.target === modal) {
+    if (e.target === refModal.current) {
       ModalStore.toggleModal();
     }
   }, []);
 
   if (ModalStore.isOpenModal) {
     return (
-      <div data-testid="modal" className="modal" onClick={onOutsideClick}>
+      <div
+        data-testid="modal"
+        ref={refModal}
+        className="modal"
+        onClick={onOutsideClick}
+      >
         <div className="modalBody">
           <div className="modalHeader">
             <div className="modalTitleWrapper">
